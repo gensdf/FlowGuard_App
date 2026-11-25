@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0757a8">
+    <title>FlowGuard | Smart Water Management</title>
+    <link rel="stylesheet" href="des.css">
+</head>
+<body>
+<div class="app-container">
+
+    <header class="topbar">
+        <button id="profile-btn" class="avatar-btn" aria-label="Profile">
+            <span class="avatar">A</span>
+        </button>
+
+        <div class="topbar-title">
+            <div class="app-name">FlowGuard</div>
+            <div class="app-tagline">Smart Residential Water Management</div>
+        </div>
+
+        <button id="notif-btn" class="icon-btn-top" aria-label="Notifications">
+            🔔<span id="notif-dot" class="notif-dot hidden"></span>
+        </button>
+    </header>
+
+    <!-- PROFILE DRAWER -->
+    <div id="drawer-backdrop" class="drawer-backdrop hidden"></div>
+
+    <aside id="drawer" class="drawer">
+        <div class="drawer-header">
+            <div class="drawer-avatar">A</div>
+            <div>
+                <div id="drawer-owner" class="drawer-owner">Admin</div>
+                <div id="drawer-system" class="drawer-sub">System: —</div>
+            </div>
+            <button id="drawer-close" class="icon-btn-top">✕</button>
+        </div>
+
+        <nav class="drawer-nav">
+            <button class="drawer-item" data-go="account">👤 Edit Profile</button>
+            <button class="drawer-item" data-go="account">🔒 Security</button>
+            <button class="drawer-item" data-go="account">🧩 Linked Hardware</button>
+            <button class="drawer-item" data-go="inbox">💬 Messages & Alerts</button>
+            <button class="drawer-item danger" id="drawer-logout">🚪 Log out</button>
+        </nav>
+    </aside>
+
+    <!-- LOGIN -->
+    <section id="login-section" class="auth-section">
+        <div class="auth-brand">💧</div>
+        <h2>Welcome to FlowGuard</h2>
+        <p class="auth-description">Sign in to manage your household water system.</p>
+
+        <form id="loginForm">
+            <label for="login-systemID">System ID</label>
+            <input id="login-systemID" type="text" placeholder="e.g. FG-001" required>
+
+            <label for="login-password">Password</label>
+            <input id="login-password" type="password" placeholder="Enter password" required>
+
+            <button type="submit" class="primary-btn">Log in</button>
+        </form>
+
+        <p class="auth-footer">
+            Don't have an account?
+            <a href="#" id="show-create-account">Create one</a>
+        </p>
+    </section>
+
+    <!-- CREATE ACCOUNT -->
+    <section id="create-account-section" class="auth-section hidden">
+        <div class="auth-brand">💧</div>
+        <h2>Create your account</h2>
+        <p class="auth-description">Register your FlowGuard system.</p>
+
+        <form id="createAccountForm">
+            <label for="create-systemID">System ID</label>
+            <input id="create-systemID" type="text" placeholder="e.g. FG-001" required>
+
+            <label for="create-password">Password</label>
+            <input id="create-password" type="password" placeholder="Choose a password" minlength="6" required>
+
+            <label for="create-owner">Account owner</label>
+            <input id="create-owner" type="text" placeholder="Your name">
+
+            <label for="create-phone">Primary mobile number</label>
+            <input id="create-phone" type="tel" placeholder="+63 912 345 6789" required>
+
+            <button type="submit" class="primary-btn">Create account</button>
+        </form>
+
+        <p class="auth-footer">
+            Already registered? <a href="#" id="show-login">Log in</a>
+        </p>
+    </section>
+
+    <!-- APPLICATION -->
+    <div id="dashboard-container">
+        <main id="views" class="views">
+
+            <!-- HOME -->
+            <section id="view-dashboard" class="view active">
+                <div class="welcome-row">
+                    <div>
+                        <p class="eyebrow">HOUSEHOLD OVERVIEW</p>
+                        <h2>Welcome, <span id="account-owner">Admin</span> 👋</h2>
+                        <p class="muted">Here's your water system summary.</p>
+                    </div>
+                    <span id="sustainability-badge" class="badge">Water Saver</span>
+                </div>
+
+                <div class="system-banner">
+                    <div class="system-banner-icon">🛡️</div>
+                    <div>
+                        <strong>FlowGuard Protection</strong>
+                        <p id="home-protection-status">Continuous-flow monitoring is configured.</p>
+                    </div>
+                </div>
+
+                <div class="section-heading">
+                    <div>
+                        <h3>System Overview</h3>
+                        <p class="muted">Your household water at a glance</p>
+                    </div>
+                    <span class="demo-label"><span></span> DEMO MODE</span>
+                </div>
+
+                <div class="overview-grid">
+                    <article class="overview-card">
+                        <div class="overview-icon blue">💧</div>
+                        <span>Current Flow Rate</span>
+                        <strong id="home-flow-rate">0.0</strong>
+                        <small>Liters per minute</small>
+                    </article>
+
+                    <article class="overview-card">
+                        <div class="overview-icon green">📊</div>
+                        <span>Today's Usage</span>
+                        <strong id="home-today-usage">0</strong>
+                        <small>Liters consumed</small>
+                    </article>
+
+                    <article class="overview-card">
+                        <div class="overview-icon purple">🚰</div>
+                        <span>Valve Status</span>
+                        <strong id="home-valve-status">Unknown</strong>
+                        <small id="home-valve-description">Demo status</small>
+                    </article>
+
+                    <article class="overview-card">
+                        <div class="overview-icon orange">📅</div>
+                        <span>This Month</span>
+                        <strong id="home-month-usage">0</strong>
+                        <small>Liters consumed</small>
+                    </article>
+                </div>
+
+                <div class="water-budget-card">
+                    <div class="budget-heading">
+                        <div>
+                            <h3>Monthly Water Budget</h3>
+                            <p class="muted">Your consumption against your set limit</p>
+                        </div>
+                        <span>🎯</span>
+                    </div>
+
+                    <div class="budget-stats">
+                        <strong id="budget-used">0</strong>
+                        <span>/ <span id="budget-limit">5000</span> L</span>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div id="budget-progress" class="progress-fill"></div>
+                    </div>
+                    <p id="budget-caption" class="budget-hint">Manage your monthly water limit in Settings.</p>
+                </div>
+
+                <div class="section-heading">
+                    <div>
+                        <h3>Your Devices</h3>
+                        <p class="muted">Monitor and manage linked devices</p>
+                    </div>
+                </div>
+
+                <div id="device-cards" class="device-cards"></div>
+
+                <button class="usage-shortcut" data-open-usage>
+                    <div class="shortcut-icon">📈</div>
+                    <div>
+                        <strong>Water Usage Analytics</strong>
+                        <p>View daily and monthly consumption, history, and estimated bills.</p>
+                    </div>
+                    <span class="shortcut-arrow">→</span>
+                </button>
+            </section>
+
+            <!-- USAGE -->
+            <section id="view-usage" class="view">
+                <div class="page-heading">
+                    <p class="eyebrow">WATER ANALYTICS</p>
+                    <h2>Consumption Overview</h2>
+                    <p class="muted">Understand your household's water usage.</p>
+                </div>
+
+                <div class="period-switch">
+                    <button class="period-btn active" data-period="month">Monthly</button>
+                    <button class="period-btn" data-period="day">Daily</button>
+                </div>
+
+                <div class="usage-summary-card">
+                    <div class="summary-card-top">
+                        <span id="usage-highlight-label">This Month's Consumption</span>
+                        <span>💧</span>
+                    </div>
+                    <strong id="usage-highlight-value">0 L</strong>
+                    <p id="usage-highlight-comparison">Compared with previous month</p>
+                    <div class="summary-divider"></div>
+                    <div class="estimated-bill-row">
+                        <span>Estimated water bill</span>
+                        <strong id="usage-highlight-bill">₱0.00</strong>
+                    </div>
+                </div>
+
+                <div class="content-card chart-card">
+                    <div class="card-heading">
+                        <div>
+                            <h3 id="usage-chart-title">Monthly Consumption</h3>
+                            <p id="usage-chart-subtitle">Water consumption over the last 6 months</p>
+                        </div>
+                        <span>📊</span>
+                    </div>
+
+                    <canvas id="monthly-consumption-chart"
+                            role="img"
+                            aria-label="Monthly water consumption chart"></canvas>
+
+                    <canvas id="daily-consumption-chart"
+                            class="hidden"
+                            role="img"
+                            aria-label="Daily water consumption chart"></canvas>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-heading">
+                        <div>
+                            <h3>Monthly Comparison</h3>
+                            <p>Current month versus previous month</p>
+                        </div>
+                        <span>⚖️</span>
+                    </div>
+
+                    <div class="comparison-grid">
+                        <div>
+                            <span>Previous Month</span>
+                            <strong id="usage-previous-month">0 L</strong>
+                        </div>
+                        <div>
+                            <span>Current Month</span>
+                            <strong id="usage-current-month">0 L</strong>
+                        </div>
+                    </div>
+
+                    <div class="comparison-track">
+                        <div id="usage-comparison-bar"></div>
+                    </div>
+                    <p id="usage-comparison-description" class="muted comparison-description"></p>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-heading">
+                        <div>
+                            <h3>Recent Consumption History</h3>
+                            <p>Review your recorded water usage</p>
+                        </div>
+                        <span>🗂️</span>
+                    </div>
+
+                    <div class="history-filter">
+                        <label for="history-month-filter">Filter by month</label>
+                        <input type="month" id="history-month-filter">
+                    </div>
+
+                    <div class="history-total">
+                        <span>Total recorded usage</span>
+                        <strong id="history-filter-total">0 L</strong>
+                    </div>
+
+                    <div id="consumption-history-list" class="history-list"></div>
+                    <p id="history-empty-message" class="empty-state hidden">
+                        No consumption records found for this period.
+                    </p>
+                </div>
+
+                <p class="disclaimer">
+                    Demonstration data is used in this preview. Actual readings will come from the connected ESP32 and water flow sensor after integration.
+                </p>
+            </section>
+
+            <!-- INBOX -->
+            <section id="view-inbox" class="view">
+                <div class="page-heading">
+                    <p class="eyebrow">SYSTEM MESSAGES</p>
+                    <h2>Messages & Alerts</h2>
+                    <p class="muted">Notifications from your FlowGuard system.</p>
+                </div>
+
+                <div id="chat-thread" class="chat-thread"></div>
+
+                <form id="chat-reply-form" class="chat-reply">
+                    <input id="chat-reply-input" type="text" placeholder="Write a message..." autocomplete="off">
+                    <button type="submit">Send</button>
+                </form>
+            </section>
+
+            <!-- SETTINGS -->
+            <section id="view-account" class="view">
+                <div class="page-heading">
+                    <p class="eyebrow">PREFERENCES & CONFIGURATION</p>
+                    <h2>Settings</h2>
+                    <p class="muted">Manage your account and FlowGuard system.</p>
+                </div>
+
+                <div class="settings-group">
+                    <button class="settings-toggle" data-acc="personal">
+                        <span>👤 Personal Information</span><span>⌄</span>
+                    </button>
+                    <div class="settings-panel" data-panel="personal">
+                        <label for="settings-owner">Account owner</label>
+                        <input id="settings-owner" type="text" placeholder="Your name">
+
+                        <label>Profile photo</label>
+                        <input type="file" id="profile-pic-input" accept="image/*" class="hidden">
+                        <div class="button-row">
+                            <button id="upload-profile-pic-btn" class="small-btn" type="button">Upload</button>
+                            <button id="remove-profile-pic-btn" class="small-btn secondary" type="button">Remove</button>
+                        </div>
+
+                        <label for="settings-primarySms">Primary mobile number</label>
+                        <div class="button-row">
+                            <input id="settings-primarySms" type="tel" placeholder="+63 912 345 6789">
+                            <button id="update-sms-btn" class="small-btn" type="button">Update</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <button class="settings-toggle" data-acc="contacts">
+                        <span>📱 Authorized Contacts</span><span>⌄</span>
+                    </button>
+                    <div class="settings-panel" data-panel="contacts">
+                        <p class="field-hint">Add up to four additional numbers for alerts.</p>
+                        <div id="alert-numbers-list"></div>
+                        <div class="button-row">
+                            <input id="new-alert-number" type="tel" placeholder="Mobile number">
+                            <button id="add-alert-number-btn" class="small-btn" type="button">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <button class="settings-toggle" data-acc="detection">
+                        <span>🛡️ Detection & Automatic Shutoff</span><span>⌄</span>
+                    </button>
+                    <div class="settings-panel" data-panel="detection">
+                        <p class="field-hint">
+                            Set how long continuous water flow must be detected before an alert is triggered.
+                        </p>
+
+                        <label for="settings-flowThreshold">Continuous-flow threshold (minutes)</label>
+                        <input type="number" id="settings-flowThreshold" min="1" max="1440" step="1">
+
+                        <p class="field-hint">Default: 60 minutes. You can customize this value.</p>
+
+                        <label class="switch-row">
+                            <span>
+                                <strong>Automatic Shutoff</strong>
+                                <small>Simulate automatic valve closure if an alert is not acknowledged within five minutes.</small>
+                            </span>
+                            <input type="checkbox" id="settings-autoShutoff">
+                        </label>
+
+                        <button type="button" id="save-detection-settings" class="primary-btn">
+                            Save Detection Settings
+                        </button>
+
+                        <button type="button" id="simulate-flow-alert" class="outline-btn">
+                            Test Continuous-Flow Alert (Demo)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <button class="settings-toggle" data-acc="budget">
+                        <span>💰 Water Budget & Billing</span><span>⌄</span>
+                    </button>
+                    <div class="settings-panel" data-panel="budget">
+                        <label for="settings-monthlyLimit">Monthly water limit (liters)</label>
+                        <input type="number" id="settings-monthlyLimit" min="100" step="100">
+
+                        <label for="settings-waterRate">Water rate per cubic meter (₱)</label>
+                        <input type="number" id="settings-waterRate" min="0" step="0.01">
+
+                        <p class="field-hint">
+                            Estimated bill = recorded consumption in cubic meters × your configured water rate. Actual utility bills may include other charges.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <button class="settings-toggle" data-acc="prefs">
+                        <span>🔔 Notification Preferences</span><span>⌄</span>
+                    </button>
+                    <div class="settings-panel" data-panel="prefs">
+                        <label class="check-row"><span>SMS Alerts (demo)</span><input type="checkbox" id="pref-sms"></label>
+                        <label class="check-row"><span>App Alerts</span><input type="checkbox" id="pref-app"></label>
+                        <label class="check-row"><span>Email Alerts (demo)</span><input type="checkbox" id="pref-email"></label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <button class="settings-toggle" data-acc="devices">
+                        <span>🧩 Linked Hardware</span><span>⌄</span>
+                    </button>
+                    <div class="settings-panel" data-panel="devices">
+                        <label for="settings-systemId">System ID</label>
+                        <div class="button-row">
+                            <input id="settings-systemId" type="text" readonly>
+                            <button id="add-device-btn" class="small-btn" type="button">Add Device</button>
+                        </div>
+                        <div id="settings-devices-list"></div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <button class="settings-toggle" data-acc="security">
+                        <span>🔒 Security</span><span>⌄</span>
+                    </button>
+                    <div class="settings-panel" data-panel="security">
+                        <label for="security-current-pass">Current password</label>
+                        <input id="security-current-pass" type="password">
+
+                        <label for="security-new-pass">New password</label>
+                        <input id="security-new-pass" type="password">
+
+                        <button id="security-save-pass" class="primary-btn" type="button">Update Password</button>
+                        <button id="unlink-account-btn" class="danger-btn" type="button">Delete Local Demo Account</button>
+                    </div>
+                </div>
+
+                <p class="disclaimer">
+                    This is a frontend prototype. Account details and settings are stored locally in this browser and are not yet connected to a cloud database or physical FlowGuard hardware.
+                </p>
+            </section>
+
+        </main>
+
+        <!-- BOTTOM NAVIGATION -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-view="dashboard">
+                <span>🏠</span><small>Home</small>
+            </button>
+            <button class="nav-item" data-view="usage">
+                <span>📊</span><small>Usage</small>
+            </button>
+            <button class="nav-item" data-view="inbox">
+                <span>💬</span><small>Inbox</small>
+                <i id="nav-alert-dot" class="nav-alert-dot hidden"></i>
+            </button>
+            <button class="nav-item" data-view="account">
+                <span>⚙️</span><small>Settings</small>
+            </button>
+        </nav>
+
+        <!-- QUICK ACTIONS -->
+        <button id="fab" class="fab" aria-label="Quick actions">＋</button>
+
+        <div id="fab-sheet" class="fab-sheet hidden">
+            <button class="fab-action" id="fab-shutoff">🚰 Manual Shut-off</button>
+            <button class="fab-action" id="fab-restore">💧 Restore Flow</button>
+            <button class="fab-action" id="fab-report">⚠️ Report an Issue</button>
+            <button class="fab-action cancel" id="fab-cancel">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script src="lgc.js"></script>
+</body>
+</html>
